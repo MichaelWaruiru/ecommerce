@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+    <link rel="icon" href="/static/images/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/static/images/favicon.ico" type="image/x-icon">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+<body class="login-body">
+    <h1>Login</h1>
+    <div class="container">
+        <form method="POST" action="/login">
+            <label for="username">Username:</label>
+            <input type="text" name="username" id="username" required placeholder="Username">
+            <br>
+            <label for="password">Password:</label>
+            <input type="password" name="password" id="password" required placeholder="Password">
+            <br>
+            <div style="position: relative;">
+                <input type="checkbox" class="password-toggle" id="showPassword">
+                <label for="showPassword">Show Password</label>
+            </div>
+            <br>
+            <input type="submit" value="Login" style="cursor: pointer; background-color: orange;">
+
+            <p style="color: white;">Don't have an account? <a style="color: red;" href="{{ url_for('signup') }}">Sign Up</a></p>
+        </form>
+    </div>
+<!-- 
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul class="flashes">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %} -->
+
+    <script src="{{ url_for('static', filename='login.js') }}"></script>
+    
+</body>
+</html>

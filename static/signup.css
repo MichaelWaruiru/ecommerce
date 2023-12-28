@@ -1,0 +1,44 @@
+.signup-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+    margin: 50px;
+}
+.password-toggle {
+    transform: scale(1.5);
+    vertical-align: middle;
+    margin-left: -60px;
+
+}
+
+input {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px;
+    margin: 5px 0;
+}
+
+.container {
+    text-align: center;
+}
+
+form {
+    background-color: rgb(3, 42, 77);
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+label {
+    color: white;
+}
+
+.flashes {
+    color: red;
+}

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>My App</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='app.css') }}"> -->
+    <link rel="stylesheet" href="/static/app.css">
+    <link rel="icon" href="/static/images/favicon.ico" type="image/x-icon" sizes="32x32">
+    <link rel="shortcut icon" href="/static/images/favicon.ico" type="image/x-icon" sizes="32x32">
+</head>
+<body class="app-body">
+    <!-- <form action="{{ url_for('home', username=username) }}" method="POST"> -->
+        <div class="top-bar">
+            <a class="logout-btn" href="logout">Logout</a>
+
+            <div class="cart-container" id="cart-container">
+                <div class="cart-icon-container" id="cart-dropdown">
+                    <img src="/static/images/shopping_cart.png" alt="Cart Icon" class="cart-icon">
+                    <span id="cart-quantity" class="cart-quantity">0</span>
+                </div>
+                <div class="cart-dropdown-content" id="cart-dropdown-content">
+                    <p>Total: $<span id="cart-total">0</span></p>
+                    <button id="checkout-btn">Checkout</button>
+                    <button id="clear-cart-btn">Clear Cart</button>
+                </div>
+            </div>
+        </div>
+        <div class="welcome-container">
+            <h1 id="welcome-message" class="glow">Welcome to our page, {{ username }}</h1>
+        </div>
+        <div class="time-container">
+            <p id="time"></p>
+        </div>
+    
+        <!-- Section to display and add items to the cart -->
+        <div class="products-container" id="products-container">
+            <!-- Product images, names, prices, and add to cart buttons will be dynamically added here -->
+        </div>
+        
+        <!-- Cart section to display items in the cart -->
+        <div class="cart-section">
+            <ul id="cart-items">
+                <!-- Cart items to be displayed here dynamically -->
+            </ul>
+        </div>
+    <!-- </form> -->
+
+    <!-- <script src="{{ url_for('static', filename='app.js') }}"></script> -->
+    <script src="/static/app.js"></script>
+    <button class="jump-to-top-btn" onclick="jumpToTop()">&uarr;</button>
+</body>
+</html>

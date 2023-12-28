@@ -1,0 +1,9 @@
+# Ignore config files
+config.ini
+config.py
+
+# Ignore Python virtual environment
+venv/
+
+# Ignore environment variables file
+.env
