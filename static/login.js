@@ -9,3 +9,8 @@ showPasswordCheckbox.addEventListener('change', function () {
         passwordInput.type = 'password';
     }
 });
+
+// Remove flash messages after a few seconds
+$(document).ready(function() {
+    $(".login-flashes").delay(6000).fadeOut("slow");
+});

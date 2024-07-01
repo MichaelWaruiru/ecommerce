@@ -37,3 +37,23 @@ form {
 label {
     color: white;
 }
+
+.login-flashes {
+    position: fixed;
+    top: 10px;
+    align-items: center;
+    justify-content: center;
+    justify-items: center;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    z-index: 1000;
+}
+.login-flashes li {
+    background-color: #f0f0f0;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
