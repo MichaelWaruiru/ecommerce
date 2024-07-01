@@ -15,21 +15,16 @@ import secrets
 app = Flask(__name__, static_url_path='/static')
 app.secret_key = os.getenv("SECRET_KEY", default="DefaultSecretKey")
 app.permanent_session_lifetime = timedelta(minutes=15)  # Sets the session timeout to 15 minutes
+
+app.config["MAIL_SERVER"] = os.getenv("MAIL_SERVER")
+app.config["MAIL_PORT"] = int(os.getenv("MAIL_PORT"))
+app.config["MAIL_USE_SSL"] = os.getenv("MAIL_USE_SSL").lower() == "true"
+app.config["MAIL_USE_TLS"] = os.getenv("MAIL_USE_TLS").lower() == "true"
+app.config["MAIL_USERNAME"] = os.getenv("MAIL_USERNAME")
+app.config["MAIL_PASSWORD"] = os.getenv("MAIL_PASSWORD")
+app.config["MAIL_DEFAULT_SENDER"] = os.getenv("MAIL_DEFAULT_SENDER")
+
 mail = Mail(app)
-
-# Configure Flask App
-app.config["MAIL_LOGS"] = True
-mail.init_app(app)
-
-app.config["MAIL_SERVER"] = "smtp.gmail.com"
-app.config["MAIL_PORT"] = 587
-app.config["MAIL_USE_TSL"] = True
-app.config["MAIL_USE_SSL"] = False
-app.config["MAIL_USERNAME"] = ""
-app.config["MAIL_PASSWORD"] = ""
-app.config["MAIL_DEFAULT_SENDER"] = ""
-
-app.config["MAIL_DEBUG"] = True
 
 
 def get_db_connection():
@@ -125,15 +120,17 @@ def signup():
 # Function to confirm email used in registration using a link
 def send_confirmation_email(email, confirmation_token):
     try:
-        print(f"Email to {email} - Confirmation Token: {confirmation_token}")
+        print(f"Preparing to send email to {email} - Confirmation Token: {confirmation_token}")
+        # print(f"Email to {email} - Confirmation Token: {confirmation_token}")
         subject = "Confirm your Email"
         body = f"Click the following link to confirm your email: {url_for('confirm_email', token=confirmation_token, _external=True)}"
 
         message = Message(subject, recipients=[email], body=body)
         mail.send(message)
-        print("Email sent successfully")
+        flash("Confirmation email sent successfully.", "success")
     except Exception as e:
-        print(f"Error sending email: {e}")
+        flash(f"Falied to send confirmation email. Error: {str(e)}", "error")
+        # print(f"Error sending email: {e}")
 
 
 @app.route("/confirm_email/<token>")
