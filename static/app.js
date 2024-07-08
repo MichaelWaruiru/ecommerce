@@ -86,7 +86,7 @@ function createProductElement(product) {
     productDiv.appendChild(pName);
 
   const pPrice = document.createElement('p');
-    pPrice.textContent = `$${product.price}`;
+    pPrice.textContent = `KES: ${product.price}`;
     productDiv.appendChild(pPrice);
 
   const quantityInput = document.createElement('input');
@@ -94,7 +94,6 @@ function createProductElement(product) {
     quantityInput.value = 1; // Default quantity is 1
     quantityInput.setAttribute('data-product', product.name); // Add data attribute to identify the product
     quantityInput.min = 1; // Set minimum quantity value to 1
-    quantityInput.name = "quantity" // This name attribute is for all browsers to access quantity addition
     productDiv.appendChild(quantityInput);
 
     // CSS styles for the input element
@@ -130,7 +129,7 @@ function addProductsToContainer() {
 
 // Function to add items with specified quantity to the cart
 function addToCart(productName, price) {
-  console.log("Adding ${productName} to the cart with price $${price");
+  console.log("Adding ${productName} to the cart with price KES: ${price");
   const quantityInput = document.querySelector(`input[type='number'][data-product="${productName}"]`);
   const quantity = parseInt(quantityInput.value);
 
@@ -159,11 +158,11 @@ function updateCart() {
       total += itemTotal;
 
       const li = document.createElement('li');
-      li.textContent = `${item.name} - Quantity: ${item.quantity} - $${itemTotal}`;
+      li.textContent = `${item.name} - Quantity: ${item.quantity} - KES: ${itemTotal}`;
       cartItems.appendChild(li);
   });
 
-  cartTotal.textContent = total;
+  cartTotal.textContent = `Total: KES ${total}`;
 
   updateCartQuantityIcon();
 }
