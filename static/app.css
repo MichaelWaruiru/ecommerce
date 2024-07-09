@@ -198,3 +198,13 @@ body {
 .cart-quantity {
     cursor: pointer;
 }
+
+.out-of-stock {
+    color: red;
+    font-weight: bold;
+}
+
+.in-stock {
+    font-weight: bold;
+    color: blue;
+}
