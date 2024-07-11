@@ -1,4 +1,11 @@
 from app import *
+import paypalrestsdk
+
+paypalrestsdk.configure({
+    "mode": "sandbox", # Sandbox for testing, live for production
+    "client_id": os.getenv("PAYPAL_CLIENT_ID"),
+    "client_secret": os.getenv("PAYPAL_CLIENT_SECRET")
+})
 
 # Route for payment checkout
 @app.route("/checkout", methods=["POST"])
