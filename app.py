@@ -10,8 +10,6 @@ from datetime import timedelta, datetime, timezone
 from flask_mail import Mail, Message
 import secrets
 
-import paypalrestsdk
-
 
 app = Flask(__name__, static_url_path='/static')
 app.secret_key = os.getenv("SECRET_KEY", default="DefaultSecretKey")
@@ -26,13 +24,6 @@ app.config["MAIL_PASSWORD"] = os.getenv("MAIL_PASSWORD")
 app.config["MAIL_DEFAULT_SENDER"] = os.getenv("MAIL_DEFAULT_SENDER")
 
 mail = Mail(app)
-
-
-paypalrestsdk.configure({
-    "mode": "sandbox", # Sandbox for testing, live for production
-    "client_id": os.getenv("PAYPAL_CLIENT_ID"),
-    "client_secret": os.getenv("PAYPAL_CLIENT_SECRET")
-})
 
 
 def get_db_connection():
