@@ -1,18 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <title>My App</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='app.css') }}"> -->
-    <link rel="stylesheet" href="/static/app.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='app.css') }}">
     <link rel="icon" href="/static/images/favicon.ico" type="image/x-icon" sizes="32x32">
     <link rel="shortcut icon" href="/static/images/favicon.ico" type="image/x-icon" sizes="32x32">
+    <script src="/static/firebaseConfig.js"></script>
 </head>
 <body class="app-body">
     <!-- <form action="{{ url_for('home', username=username) }}" method="POST"> -->
         <div class="top-bar">
             <a class="logout-btn" href="logout">Logout</a>
+            <br>
+            <div>
+                <h2>Update Inventory</h2>
+                <input type="text" id="update-product-name" placeholder="Product Name">
+                <input type="number" id="update-product-quantity" placeholder="Quantity">
+                <button id="update-inventory-btn">Update Inventory</button>
+            </div>
 
             <div class="cart-container" id="cart-container">
                 <div class="cart-icon-container" id="cart-dropdown">
@@ -46,8 +51,7 @@
         </div>
     <!-- </form> -->
 
-    <!-- <script src="{{ url_for('static', filename='app.js') }}"></script> -->
-    <script src="/static/app.js"></script>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
     <button class="jump-to-top-btn" onclick="jumpToTop()">&uarr;</button>
 </body>
 </html>
