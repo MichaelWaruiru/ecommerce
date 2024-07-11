@@ -208,3 +208,18 @@ body {
     font-weight: bold;
     color: blue;
 }
+
+#update-product-name, 
+#update-product-quantity,
+#update-inventory-btn {
+    border: 1px solid #949091;
+    font-size: 16px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    text-decoration: none;
+}
+
+#update-inventory-btn {
+    background-color:rgb(21, 212, 132);
+}
