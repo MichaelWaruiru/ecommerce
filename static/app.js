@@ -136,9 +136,6 @@ if (product.inventory < quantity) {
   return;
 }
 
-product.inventory -= quantity; // Deduct the quantity from inventory
-saveProductsToLocalStorage(); // Save updated inventory to localStorage
-
 let existingItem = cart.find(item => item.name === productName);
 
 if (existingItem) {
@@ -148,16 +145,17 @@ if (existingItem) {
 }
 
 updateCart();
-updateProductInventory(productName, product.inventory);
 }
 
 // Function to update the product inventory display
-function updateProductInventory(productName, inventory) {
+function updateProductInventory(productName, inventory, price) {
 const productElements = document.querySelectorAll('.product');
 productElements.forEach(productElement => {
   const nameElement = productElement.querySelector('p:nth-child(2)');
+  const priceElement = productElement.querySelector('p:nth-child(3)');
   const inventoryElement = productElement.querySelector('.inventory');
   if (nameElement.textContent === productName) {
+    priceElement.textContent = `KES: ${price}`;
     if (inventory > 0) {
       inventoryElement.textContent = `In Stock: ${inventory}`;
       inventoryElement.classList.remove('out-of-stock');
@@ -175,12 +173,14 @@ productElements.forEach(productElement => {
 function updateInventory() {
 const productNameInput = document.getElementById('update-product-name');
 const productQuantityInput = document.getElementById('update-product-quantity');
+const productPriceInput = document.getElementById('update-product-price')
 
 const productName = productNameInput.value.trim();
 const quantity = parseInt(productQuantityInput.value);
+const price = parseFloat(productPriceInput.value);
 
-if (!productName || isNaN(quantity)) {
-  alert('Please enter valid product name and quantity.');
+if (!productName || isNaN(quantity) || isNaN(price)) {
+  alert('Please enter valid product name, quantity and price.');
   return;
 }
 
@@ -188,13 +188,14 @@ let product = products.find(p => p.name === productName);
 
 if (product) {
   product.inventory += quantity;
-  alert(`Inventory updated. New stock for ${productName} is ${product.inventory}`);
+  product.price = price;
+  alert(`Inventory updated. New stock for ${productName} is ${product.inventory} and new price is KES ${product.price}`);
 } else {
   alert(`Product ${productName} not found.`);
 }
 
 saveProductsToLocalStorage();
-updateProductInventory(productName, product.inventory);
+updateProductInventory(productName, product.inventory, product.price);
 }
 
 // Add event listener to the update inventory button
@@ -226,17 +227,21 @@ updateCartQuantityIcon();
 const checkoutButton = document.getElementById("checkout-btn");
 const clearCartButton = document.getElementById("clear-cart-btn");
 
-checkoutButton.addEventListener("click", checkout);
+checkoutButton.addEventListener("click", displayPaymentOptions);
 clearCartButton.addEventListener("click", clearCart);
 
 function checkout() {
-alert("Checked out completed! Thank you for shopping.");
 cart.forEach(item => {
   let product = products.find(p => p.name === item.name);
-  updateProductInventory(item.name, product.inventory);
+  if (product) {
+    product.inventory -= item.quantity; // Deduct the quantity from inventory during checkout
+    updateProductInventory(item.name, product.inventory, product.price);
+  }
 });
+alert("Checked out completed! Thank you for shopping.");
 clearCart();
 hideCart(); // Hide the cart after checkout
+saveProductsToLocalStorage(); // Save updated inventory to localStorage
 }
 
 function toggleCartDropdown() {
@@ -274,3 +279,64 @@ addProductsToContainer();
 // Find the cart icon element
 const cartIconContainer = document.getElementById("cart-dropdown");
 cartIconContainer.addEventListener("click", toggleCartDropdown);
+
+document.getElementById('checkout-btn').addEventListener('click', displayPaymentOptions);
+
+function displayPaymentOptions() {
+  const paymentOptionsContainer = document.getElementById('payment-options-container');
+  paymentOptionsContainer.innerHTML = ''; // Clear any existing content
+
+  const payPalButton = document.createElement('button');
+  payPalButton.id = 'paypal-btn';
+  payPalButton.textContent = 'Pay with PayPal';
+  payPalButton.addEventListener('click', handlePayPalPayment);
+  
+  const mpesaButton = document.createElement('button');
+  mpesaButton.id = 'mpesa-btn';
+  mpesaButton.textContent = 'Pay with Mpesa';
+  mpesaButton.addEventListener('click', handleMpesaPayment);
+
+  paymentOptionsContainer.appendChild(payPalButton);
+  paymentOptionsContainer.appendChild(mpesaButton);
+  paymentOptionsContainer.style.display = 'block'; // Show the payment options container
+}
+
+function handlePayPalPayment() {
+  fetch('/create_paypal_payment', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ cart: cart })
+  })
+  .then(response => response.json())
+  .then(data => {
+      if (data.approval_url) {
+          checkout(); // Deduct inventory before redirecting
+          window.location.href = data.approval_url; // Redirect to PayPal for approval
+      } else {
+          alert('Failed to create PayPal payment.');
+      }
+  })
+  .catch(error => console.error('Error:', error));
+}
+
+function handleMpesaPayment() {
+  fetch('/create_mpesa_payment', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ cart: cart })
+  })
+  .then(response => response.json())
+  .then(data => {
+      if (data.success) {
+          checkout(); // Deduct inventory after payment success
+          alert('Mpesa payment initiated. Follow the instructions on your phone.');
+      } else {
+          alert('Failed to initiate Mpesa payment.');
+      }
+  })
+  .catch(error => console.error('Error:', error));
+}
