@@ -1,13 +1,25 @@
-body {
+html, body {
+    height: 100%; /* Ensure body takes full height */
     margin: 0;
     padding: 0;
-    height: 1000px;
+}
+
+
+body {
+    /* margin: 0;
+    padding: 0;
+    height: 100%;
     overflow: auto;
     white-space: normal;
+    --value: white;
+    background-color: var(--value);
+    transition: background-color 1s; */
+    display: flex;
+    flex-direction: column;
 }
 
 .app-body {
-    /* max-width: 1200px; */
+    flex: 1;
     margin: 0 auto;
 }
 
@@ -46,10 +58,9 @@ body {
     transition: transform 0.3s ease-in-out;
 }
 
-/* Makes the images to zoom in and out */
-/* .product img:hover {
+.product img:hover {
     transform: scale(1.3);
-} */
+}
 
 /* Styles for logout button */
 .logout-btn {
@@ -63,6 +74,11 @@ body {
     position: fixed;
     top: 10px;
     left: 10px;
+}
+
+.logout-btn:hover {
+    background-color: red;
+    color: white;
 }
 
 .top-bar {
@@ -108,6 +124,10 @@ body {
 @media screen and (max-width: 868px) {
     #products-container {
         grid-template-columns: repeat(auto-fill, minmax(70%, 1fr));
+    }
+
+    .product {
+        font-size: small;
     }
 }
 
@@ -157,6 +177,12 @@ body {
     background-color: #555;
     opacity: 0.4;
     transition-duration: 0.7s;
+}
+
+.logout-btn,
+.cart-icon-container,
+.jump-to-top-btn {
+    z-index: 1000; /*Elements don't interfere with scrolling */
 }
 
 /* CSS styles for the decrement and increment button */
@@ -211,7 +237,8 @@ body {
 
 #update-product-name, 
 #update-product-quantity,
-#update-inventory-btn {
+#update-inventory-btn,
+#update-product-price {
     border: 1px solid #949091;
     font-size: 16px;
     padding: 10px 20px;
