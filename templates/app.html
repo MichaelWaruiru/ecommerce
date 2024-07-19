@@ -5,7 +5,7 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='app.css') }}">
     <link rel="icon" href="/static/images/favicon.ico" type="image/x-icon" sizes="32x32">
     <link rel="shortcut icon" href="/static/images/favicon.ico" type="image/x-icon" sizes="32x32">
-    <script src="/static/firebaseConfig.js"></script>
+    <!-- <script src="/static/firebaseConfig.js"></script> -->
 </head>
 <body class="app-body">
     <!-- <form action="{{ url_for('home', username=username) }}" method="POST"> -->
@@ -16,6 +16,7 @@
                 <h2>Update Inventory</h2>
                 <input type="text" id="update-product-name" placeholder="Product Name">
                 <input type="number" id="update-product-quantity" placeholder="Quantity">
+                <input type="number" id="update-product-price" placeholder="New Price">
                 <button id="update-inventory-btn">Update Inventory</button>
             </div>
 
@@ -25,9 +26,12 @@
                     <span id="cart-quantity" class="cart-quantity">0</span>
                 </div>
                 <div class="cart-dropdown-content" id="cart-dropdown-content">
-                    <p><span id="cart-total">0</span></p>
+                    <p>Total: <span id="cart-total">0</span></p>
                     <button id="checkout-btn">Checkout</button>
                     <button id="clear-cart-btn">Clear Cart</button>
+                    <div id="payment-options-container" style="display: none;">
+                        <!-- Payment options will be appended here -->
+                    </div>
                 </div>
             </div>
         </div>

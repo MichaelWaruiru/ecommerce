@@ -1,4 +1,4 @@
-from flask import Flask, redirect, render_template, url_for, request, session, flash
+from flask import Flask, redirect, render_template, url_for, request, session, flash, jsonify
 import mysql.connector
 import bcrypt
 from config import read_db_config
@@ -9,7 +9,9 @@ import os
 from datetime import timedelta, datetime, timezone
 from flask_mail import Mail, Message
 import secrets
-
+import requests
+from mpesaToken import *
+import base64
 
 app = Flask(__name__, static_url_path='/static')
 app.secret_key = os.getenv("SECRET_KEY", default="DefaultSecretKey")
@@ -24,6 +26,11 @@ app.config["MAIL_PASSWORD"] = os.getenv("MAIL_PASSWORD")
 app.config["MAIL_DEFAULT_SENDER"] = os.getenv("MAIL_DEFAULT_SENDER")
 
 mail = Mail(app)
+
+# Mpesa configuration
+SHORTCODE = os.getenv("SHORTCODE")
+PASSKEY = os.getenv("PASSKEY")
+MPESA_API_BASE = 'https://sandbox.safaricom.co.ke'  # Use sandbox for testing
 
 
 def get_db_connection():
@@ -245,6 +252,67 @@ def home(username):
     else:
          return redirect(url_for("login"))
     
+
+# Mpesa Payment Routes
+def initiate_stk_push(phone_number, amount, account_reference, transaction_desc):
+    access_token = get_access_token()
+    api_url = f'{MPESA_API_BASE}/mpesa/stkpush/v1/processrequest'
+    
+    timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+    password = base64.b64encode(f'{SHORTCODE}{PASSKEY}{timestamp}'.encode()).decode('utf-8')
+    
+    headers = {
+        'Authorization': f'Bearer {access_token}',
+        'Content-Type': 'application/json'
+    }
+
+    # Remove + from phone number
+    phone_number = phone_number.lstrip('+')
+
+    callback_url = url_for('mpesa_callback', _external=True)
+    print(callback_url)
+    
+    payload = {
+        'BusinessShortCode': SHORTCODE,
+        'Password': password,
+        'Timestamp': timestamp,
+        'TransactionType': 'CustomerPayBillOnline',
+        'Amount': amount,
+        'PartyA': phone_number,
+        'PartyB': SHORTCODE,
+        'PhoneNumber': phone_number,
+        'CallBackURL': url_for('mpesa_callback', _external=True),  # Update with your callback URL
+        'AccountReference': account_reference,
+        'TransactionDesc': transaction_desc
+    }
+    
+    print("Sending STK Push request with payload:", payload)
+    response = requests.post(api_url, json=payload, headers=headers)
+    print("MPesa response status code:", response.status_code)  # Add this line to debug
+    print("MPesa response body:", response.text)
+    return response.json()
+
+@app.route('/checkout', methods=['POST'])
+def checkout():
+    data = request.json
+    phone_number = data['phone_number']
+    amount = data['amount']
+    account_reference = 'Order123'
+    transaction_desc = 'Payment for order'
+    
+    response = initiate_stk_push(phone_number, amount, account_reference, transaction_desc)
+    # print("Checkout response", response)
+    if response.get('errorCode'):
+        return jsonify({'error': response.get('errorMessage')}), 400
+    return jsonify(response)
+
+@app.route('/mpesa_callback', methods=['POST'])
+def mpesa_callback():
+    data = request.json
+    # Process the callback data here (e.g., update order status, save transaction details)
+    print(data)
+    return jsonify({'ResultCode': 0, 'ResultDesc': 'Accepted'})
+
 
 if __name__ == '__main__':
     app.run(debug=True)
