@@ -7,3 +7,6 @@ venv/
 
 # Ignore environment variables file
 .env
+
+# ignore unused files
+c2b.py
