@@ -2,8 +2,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 50vh;
-    margin: 50px;
+    /* height: 50vh;
+    margin: 50px; */
 }
 .password-toggle {
     transform: scale(1.5);
